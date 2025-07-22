@@ -27,7 +27,7 @@ export default defineConfig({
         },
         hmr: {
             protocol: 'ws',
-            host: 'host.docker.internal',
+            // host: 'host.docker.internal', // Usar no windows OS
             port: 5137,
             clientPort: 5137,
         },
