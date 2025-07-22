@@ -1,0 +1,70 @@
+services:
+  laravel:
+    container_name: demander-laravel
+    build:
+      context: .
+      dockerfile: ./docker/php/Dockerfile
+    restart: no
+    volumes:
+      - ./:/var/www:delegated
+      # - vendor_cache:/var/www/vendor
+      - bootstrap_cache:/var/www/bootstrap/cache
+      - ./docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini:ro
+    ports:
+      - '9000:9000'
+      - '5137:5137' 
+    networks:
+      - demander-network
+    depends_on:
+      - mysql
+
+  nginx:
+    container_name: demander-nginx
+    build:
+      context: ./docker/nginx
+      dockerfile: Dockerfile
+    restart: no
+    ports:
+      - '8080:80'
+      - '443:443'
+    volumes:
+      - ./:/var/www:delegated,ro
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+    networks:
+      - demander-network
+    depends_on:
+      - laravel
+
+  mysql:
+    container_name: demander-mysql
+    build:
+      context: ./docker/mysql
+      dockerfile: Dockerfile
+    command: --default-authentication-plugin=mysql_native_password
+    restart: no
+    volumes:
+      - demander-data:/var/lib/mysql:cached
+      - ./docker/mysql/my.cnf:/etc/mysql/my.cnf
+    networks:
+      - demander-network
+    ports:
+      - '3306:3306'
+    environment:
+      MYSQL_DATABASE: demander
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+
+networks:
+  demander-network:
+    driver: bridge
+
+volumes:
+  demander-data:
+    driver: local
+  vendor_cache:
+    driver: local
+  bootstrap_cache:
+    driver: local
+  node_modules_cache:
+    driver: local
