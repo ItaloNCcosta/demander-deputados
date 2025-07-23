@@ -38,4 +38,9 @@ final class Deputy extends Model
         'end_date'       => 'date',
         'gender'         => GenderEnum::class,
     ];
+
+    public function expenses()
+    {
+        return $this->hasMany(DeputyExpense::class);
+    }
 }
