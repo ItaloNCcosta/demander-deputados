@@ -12,7 +12,7 @@ final class Deputy extends Model
     protected $fillable = [
         'external_id',
         'legislature_id',
-        'parliamentary_name',
+        'name',
         'state_code',
         'party_acronym',
         'gender',

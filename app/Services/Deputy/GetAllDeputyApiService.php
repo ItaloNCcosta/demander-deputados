@@ -27,4 +27,13 @@ final class GetAllDeputyApiService
 
         return $response->json();
     }
+
+    public function listByUrl(string $url): array
+    {
+        $response = $this->http
+            ->retry(3, 100)
+            ->get($url);
+
+        return $response->json();
+    }
 }
