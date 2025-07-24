@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class DeputyExpense extends Model
+final class DeputyExpense extends Model
 {
     protected $fillable = [
         'deputy_id',
@@ -31,6 +33,7 @@ class DeputyExpense extends Model
         'order_direction',
         'order_by',
         'accept_header',
+        'last_synced_at'
     ];
 
     protected $casts = [
@@ -48,6 +51,7 @@ class DeputyExpense extends Model
         'net_amount'          => 'decimal:2',
         'page'                => 'integer',
         'per_page'            => 'integer',
+        'last_synced_at'      => 'datetime',
     ];
 
     public function deputy()

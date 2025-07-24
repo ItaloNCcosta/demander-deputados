@@ -18,7 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('legislature_id')->index();
             $table->string('name', 255)->index();
             $table->char('state_code', 2)->index();
-            $table->string('party_acronym', 10)->index();
+            $table->string('party_acronym', 25)->index();
             $table->enum('gender', GenderEnum::getValues())->index();
             $table->string('email', 255)->nullable();
             $table->string('uri', 255)->nullable();

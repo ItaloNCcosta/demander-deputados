@@ -35,8 +35,13 @@ return new class extends Migration
             $table->decimal('document_amount', 15, 2)->default(0);
             $table->decimal('disallowed_amount', 15, 2)->default(0);
             $table->decimal('net_amount', 15, 2)->default(0);
-
+            $table->unsignedInteger('page')->nullable();
+            $table->unsignedInteger('per_page')->nullable();
+            $table->enum('order_direction', ['asc', 'desc'])->default('asc');
+            $table->string('order_by', 100)->default('year');
+            $table->string('accept_header', 100)->nullable();
             $table->timestamps();
+            $table->timestamp('last_synced_at')->nullable()->index();
         });
     }
 
