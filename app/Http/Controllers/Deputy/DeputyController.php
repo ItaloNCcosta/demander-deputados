@@ -26,7 +26,7 @@ final class DeputyController extends Controller
         $state = StateEnum::cases();
         $party = PartyEnum::cases();
 
-        return view('deputy.index', [
+        return view('deputies.index', [
             'deputies' => $deputies,
             'state' => $state,
             'party' => $party,
@@ -48,7 +48,7 @@ final class DeputyController extends Controller
 
         $data = $showService->handle($deputy, $filters);
 
-        return view('deputy.show', [
+        return view('deputies.show', [
             'deputy'   => $data['deputy'],
             'expenses' => $data['expenses'],
             'filters'  => $filters,

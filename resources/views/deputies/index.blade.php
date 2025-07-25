@@ -7,7 +7,7 @@
             <p class="mt-4 max-w-2xl mx-auto text-emerald-50 text-sm md:text-base">
                 Filtre por nome, estado, partido ou tipo de despesa. Dados oficiais, explicados de forma simples.
             </p>
-            <form action="{{ route('deputy.index') }}" id="buscar" class="mt-8 max-w-2xl mx-auto" method="GET">
+            <form action="{{ route('deputies.index') }}" id="buscar" class="mt-8 max-w-2xl mx-auto" method="GET">
                 <div class="flex rounded-xl overflow-hidden shadow-lg">
                     {{-- Wrapper relativo só pro input --}}
                     <div class="relative flex-1">
@@ -16,7 +16,7 @@
                             class="w-full px-4 py-4 text-sm bg-slate-900/90 text-white focus:outline-none" />
 
                         @if (request('name'))
-                            <a href="{{ route('deputy.index') }}"
+                            <a href="{{ route('deputies.index') }}"
                                 class="absolute inset-y-0 right-3 flex items-center text-slate-400 hover:text-slate-200"
                                 aria-label="Limpar busca">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none"
@@ -47,7 +47,7 @@
             </button>
         </div>
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-4">
-            <form method="GET" action="{{ route('deputy.index') }}"
+            <form method="GET" action="{{ route('deputies.index') }}"
                 class="grid grid-cols-1 md:grid-cols-6 gap-4 md:gap-6">
                 {{-- Estado --}}
                 <div class="md:col-span-2">
@@ -85,7 +85,7 @@
                         class="bg-emerald-600 hover:bg-emerald-700 text-white text-sm px-4 py-2 rounded-lg">
                         Aplicar
                     </button>
-                    <a href="{{ route('deputy.index') }}"
+                    <a href="{{ route('deputies.index') }}"
                         class="text-slate-600 text-sm px-4 py-2 rounded-lg hover:bg-slate-100">
                         Limpar
                     </a>
@@ -105,7 +105,7 @@
                             alt="Foto de {{ $deputy->name }}" class="w-14 h-14 rounded-full object-cover" />
                         <div>
                             <h3 class="font-semibold text-slate-900 leading-tight">
-                                <a href="{{ route('deputy.show', $deputy) }}">{{ $deputy->name }}</a>
+                                <a href="{{ route('deputies.show', $deputy) }}">{{ $deputy->name }}</a>
                             </h3>
                             <p class="text-xs text-slate-500 mt-0.5">{{ $deputy->party_acronym }} •
                                 {{ $deputy->state_code }}</p>

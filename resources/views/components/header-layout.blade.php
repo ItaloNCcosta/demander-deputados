@@ -8,7 +8,7 @@
             VigilaBR
         </a>
         <nav class="hidden md:flex gap-6 text-sm font-medium text-slate-600">
-            <a href="/index.html#buscar" class="hover:text-emerald-600">Buscar</a>
+            <a href="{{ route('deputies.index') }}" class="hover:text-emerald-600">Buscar</a>
             <a href="{{ route('expenses.index') }}" class="hover:text-emerald-600">Gastos</a>
             <a href="{{ route('deputies.ranking') }}" class="hover:text-emerald-600">Ranking</a>
             <a href="/sobre.html" class="hover:text-emerald-600">Sobre</a>

@@ -9,8 +9,8 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/', [DeputyController::class, 'index'])->name('deputy.index');
-Route::get('/deputy/{deputy}/expenses', [DeputyController::class, 'show'])->name('deputy.show');
+Route::get('/', [DeputyController::class, 'index'])->name('deputies.index');
+Route::get('/deputies/{deputy}/expenses', [DeputyController::class, 'show'])->name('deputies.show');
 Route::get('deputies/ranking', [DeputyRankingController::class, 'index'])
     ->name('deputies.ranking');
 

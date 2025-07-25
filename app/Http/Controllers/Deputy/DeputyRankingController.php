@@ -19,7 +19,7 @@ final class DeputyRankingController extends Controller
         $limit = (int) $request->get('limit', 10);
         $ranking = $rankingService->listTopByExpenses($filters, $limit);
 
-        return view('deputy.ranking', [
+        return view('deputies.ranking', [
             'ranking' => $ranking,
             'stateOptions' => StateEnum::cases(),
             'partyOptions' => PartyEnum::cases(),
