@@ -57,7 +57,6 @@
             <table class="min-w-full text-sm">
                 <thead class="bg-slate-50 text-slate-600">
                     <tr>
-                        <th class="px-4 py-3 text-left font-medium">#</th>
                         <th class="px-4 py-3 text-left font-medium">Deputado</th>
                         <th class="px-4 py-3 text-left font-medium">Estado</th>
                         <th class="px-4 py-3 text-left font-medium">Partido</th>
@@ -67,7 +66,6 @@
                 <tbody class="divide-y divide-slate-100">
                     @foreach ($ranking as $idx => $deputy)
                         <tr class="hover:bg-slate-50">
-                            <td class="px-4 py-3">{{ $idx + 1 }}</td>
                             <td class="px-4 py-3">
                                 <a href="{{ route('deputy.show', $deputy) }}" class="text-emerald-700 hover:underline">
                                     {{ $deputy->name }}
