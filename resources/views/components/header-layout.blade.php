@@ -5,7 +5,7 @@
                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6l4 2" />
                 <circle cx="12" cy="12" r="10" />
             </svg>
-            VigilaBR
+            VigiaBR
         </a>
         <nav class="hidden md:flex gap-6 text-sm font-medium text-slate-600">
             <a href="{{ route('deputies.index') }}" class="hover:text-emerald-600">Buscar</a>

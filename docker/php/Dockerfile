@@ -1,4 +1,4 @@
-FROM php:8.3-fpm
+FROM php:8.4-fpm
 
 WORKDIR /var/www
 
@@ -20,7 +20,9 @@ RUN apt-get update && apt-get install -y \
     apt-utils \
     libonig-dev
 
-RUN docker-php-ext-install zip pdo_mysql mbstring exif
+RUN docker-php-ext-install pdo_mysql zip mbstring pcntl \
+ && pecl install redis \
+ && docker-php-ext-enable redis
 RUN docker-php-ext-configure gd --with-freetype=/usr/include/ --with-jpeg=/usr/include/
 RUN docker-php-ext-install gd
 

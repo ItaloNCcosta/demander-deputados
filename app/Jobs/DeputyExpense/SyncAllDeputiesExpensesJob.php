@@ -13,6 +13,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Support\Facades\Bus;
+use Illuminate\Support\Facades\Log;
 
 final class SyncAllDeputiesExpensesJob implements ShouldQueue
 {
@@ -27,12 +28,16 @@ final class SyncAllDeputiesExpensesJob implements ShouldQueue
     {
         Deputy::query()
             ->chunkById(100, function (Collection $deputies) {
-                Bus::batch(
-                    $deputies->map(fn(Deputy $d) => new SyncDeputyExpensesJob($d->external_id))
-                )
-                ->name('Sync Deputy Expenses Batch')
-                ->onQueue('sync_expenses')
-                ->dispatch();
+                $jobs = $deputies
+                    ->map(fn(Deputy $d) => new SyncDeputyExpensesJob($d->external_id))
+                    ->all();
+
+                Bus::batch($jobs)
+                    ->name('Sync Deputy Expenses Batch')
+                    ->onQueue('sync_expenses')
+                    ->dispatch();
             });
+
+        Log::info("[Scheduler] Finish SyncAllDeputiesExpensesJob at " . now()->toDateTimeString());
     }
 }

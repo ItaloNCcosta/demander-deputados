@@ -1,4 +1,14 @@
 services:
+
+  redis:
+    image: redis:7-alpine
+    container_name: demander-redis
+    restart: unless-stopped
+    ports:
+      - '6379:6379'
+    networks:
+      - demander-network
+
   laravel:
     container_name: demander-laravel
     build:
@@ -54,6 +64,51 @@ services:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_USER: user
       MYSQL_PASSWORD: password
+
+  worker:
+    container_name: demander-worker
+    build:
+      context: .
+      dockerfile: ./docker/php/Dockerfile
+    command: >
+      sh -c "php artisan queue:work redis --sleep=3 --tries=3 --timeout=90"
+    volumes:
+      - ./:/var/www:delegated
+      - bootstrap_cache:/var/www/bootstrap/cache
+    depends_on:
+      - redis
+      - laravel
+    networks:
+      - demander-network
+
+  scheduler:
+    container_name: demander-scheduler
+    build:
+      context: .
+      dockerfile: ./docker/php/Dockerfile
+    command: >
+      sh -c "php artisan schedule:work --verbose"
+    volumes:
+      - ./:/var/www:delegated
+      - bootstrap_cache:/var/www/bootstrap/cache
+    depends_on:
+      - laravel
+    networks:
+      - demander-network
+
+  horizon:
+    container_name: demander-horizon
+    build:
+      context: .
+      dockerfile: ./docker/php/Dockerfile
+    command: php artisan horizon
+    volumes:
+      - ./:/var/www:delegated
+      - bootstrap_cache:/var/www/bootstrap/cache
+    depends_on:
+      - redis
+    networks:
+      - demander-network
 
 networks:
   demander-network:
