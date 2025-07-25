@@ -6,6 +6,7 @@ namespace App\Services\Expense;
 
 use App\Models\DeputyExpense;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
 final class ExpenseListService
@@ -15,7 +16,7 @@ final class ExpenseListService
         $this->deputyExpense = $deputyExpense;
     }
 
-    public function listByPeriod(array $filters = []): Collection
+    public function listByPeriod(array $filters = []): Collection|LengthAwarePaginator
     {
         return $this->deputyExpense->newQuery()
             ->when(
@@ -34,6 +35,6 @@ final class ExpenseListService
                 $q->where('expense_type', $type)
             )
             ->orderByDesc('document_date')
-            ->get();
+            ->paginate(100);
     }
 }

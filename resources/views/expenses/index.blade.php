@@ -1,5 +1,4 @@
-<x-guest-layout>
-    {{-- Hero --}}
+<x-guest-layout title="Despesas">
     <section class="bg-gradient-to-tr from-slate-800 to-slate-700 text-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 text-center">
             <h1 class="text-3xl md:text-4xl font-extrabold">Gastos dos Deputados</h1>
@@ -9,12 +8,10 @@
         </div>
     </section>
 
-    {{-- Filtros --}}
     <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10" x-data="{ open: true }">
         <form method="GET" action="{{ route('expenses.index') }}"
             class="grid grid-cols-1 md:grid-cols-8 gap-4 bg-white p-4 rounded-xl shadow-sm border border-slate-200/70 mb-8"
             :class="{ 'hidden': !open, 'block': open }">
-            {{-- Período inicial --}}
             <div class="md:col-span-2">
                 <label class="block text-xs font-semibold text-slate-500 mb-1 uppercase tracking-wide">
                     Período inicial
@@ -23,7 +20,6 @@
                     class="w-full rounded-lg border-slate-300 text-sm focus:ring-emerald-500 focus:border-emerald-500">
             </div>
 
-            {{-- Período final --}}
             <div class="md:col-span-2">
                 <label class="block text-xs font-semibold text-slate-500 mb-1 uppercase tracking-wide">
                     Período final
@@ -32,23 +28,6 @@
                     class="w-full rounded-lg border-slate-300 text-sm focus:ring-emerald-500 focus:border-emerald-500">
             </div>
 
-            {{-- Tipo de despesa --}}
-            {{-- <div class="md:col-span-2">
-                <label class="block text-xs font-semibold text-slate-500 mb-1 uppercase tracking-wide">
-                    Tipo de despesa
-                </label>
-                <select name="type"
-                    class="w-full rounded-lg border-slate-300 text-sm focus:ring-emerald-500 focus:border-emerald-500">
-                    <option value="">Todos</option>
-                    @foreach ($expenseType as $key => $label)
-                        <option value="{{ $key }}" @selected(($filters['type'] ?? '') === (string) $key)>
-                            {{ $label }}
-                        </option>
-                    @endforeach
-                </select>
-            </div> --}}
-
-            {{-- Ações --}}
             <div class="md:col-span-2 flex items-end gap-2">
                 <button type="submit"
                     class="bg-emerald-600 hover:bg-emerald-700 text-white text-sm px-4 py-2 rounded-lg">
@@ -61,7 +40,6 @@
             </div>
         </form>
 
-        {{-- Tabela de resultados --}}
         <div class="overflow-hidden rounded-xl border border-slate-200/70 shadow-sm bg-white">
             <table class="min-w-full text-sm">
                 <thead class="bg-slate-50 text-slate-600">
@@ -100,6 +78,10 @@
                     @endforelse
                 </tbody>
             </table>
+        </div>
+
+        <div class="mt-10 flex justify-center">
+            <x-pagination :paginator="$expenses" />
         </div>
     </section>
 </x-guest-layout>

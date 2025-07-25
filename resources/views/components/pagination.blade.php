@@ -1,6 +1,5 @@
 <nav role="navigation" aria-label="Pagination">
     <ul class="flex items-center justify-center space-x-1 text-sm">
-        {{-- Previous Page Link --}}
         @if ($paginator->onFirstPage())
             <li class="px-3 py-1 text-slate-400 border border-slate-200 rounded">&laquo;</li>
         @else
@@ -11,19 +10,19 @@
             </li>
         @endif
 
-        {{-- Page Number Links --}}
-        @for ($page = 1; $page <= $paginator->lastPage(); $page++)
+        @for ($page = $startPage; $page <= $endPage; $page++)
             @if ($page == $paginator->currentPage())
                 <li class="px-3 py-1 bg-emerald-600 text-white rounded">{{ $page }}</li>
             @else
                 <li>
                     <a href="{{ $paginator->url($page) }}"
-                        class="px-3 py-1 text-slate-600 border border-slate-200 rounded hover:bg-emerald-50">{{ $page }}</a>
+                        class="px-3 py-1 text-slate-600 border border-slate-200 rounded hover:bg-emerald-50">
+                        {{ $page }}
+                    </a>
                 </li>
             @endif
         @endfor
 
-        {{-- Next Page Link --}}
         @if ($paginator->hasMorePages())
             <li>
                 <a href="{{ $paginator->nextPageUrl() }}"

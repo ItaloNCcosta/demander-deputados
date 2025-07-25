@@ -9,7 +9,6 @@
             </p>
             <form action="{{ route('deputies.index') }}" id="buscar" class="mt-8 max-w-2xl mx-auto" method="GET">
                 <div class="flex rounded-xl overflow-hidden shadow-lg">
-                    {{-- Wrapper relativo só pro input --}}
                     <div class="relative flex-1">
                         <input id="searchInput" name="name" type="text" value="{{ request('name') }}"
                             placeholder="Digite o nome do deputado…"
@@ -49,7 +48,6 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-4">
             <form method="GET" action="{{ route('deputies.index') }}"
                 class="grid grid-cols-1 md:grid-cols-6 gap-4 md:gap-6">
-                {{-- Estado --}}
                 <div class="md:col-span-2">
                     <label class="block text-xs font-semibold text-slate-500 mb-1 uppercase tracking-wide">
                         Estado
@@ -64,7 +62,6 @@
                     </select>
                 </div>
 
-                {{-- Partido --}}
                 <div class="md:col-span-2">
                     <label class="block text-xs font-semibold text-slate-500 mb-1 uppercase tracking-wide">
                         Partido
@@ -79,7 +76,6 @@
                     </select>
                 </div>
 
-                {{-- Botões --}}
                 <div class="md:col-span-2 flex items-end gap-2">
                     <button type="submit"
                         class="bg-emerald-600 hover:bg-emerald-700 text-white text-sm px-4 py-2 rounded-lg">
@@ -94,7 +90,6 @@
         </div>
     </section>
 
-    {{-- Results --}}
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <h2 class="text-xl font-semibold mb-6">Resultados ({{ $deputies->total() }})</h2>
         <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">

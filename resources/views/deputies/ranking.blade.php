@@ -1,4 +1,4 @@
-<x-guest-layout>
+<x-guest-layout title='Ranking'>
     <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <h1 class="text-3xl font-extrabold mb-8">Ranking de Gastos</h1>
 
