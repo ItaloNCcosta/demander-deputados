@@ -30,6 +30,7 @@ final class DeputyListService
                 $query->where('party_acronym', $party_acronym);
             })
             ->orderBy('name')
-            ->paginate($limit);
+            ->paginate($limit)
+            ->appends($filters);
     }
 }
