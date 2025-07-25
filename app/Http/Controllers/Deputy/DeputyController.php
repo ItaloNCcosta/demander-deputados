@@ -23,7 +23,7 @@ final class DeputyController extends Controller
     ): View {
         $deputies = $deputyListService->listByFilters($request->all());
         $ranking = $deputyRankingService->listTopByExpenses();
-        $state = $state = StateEnum::cases();
+        $state = StateEnum::cases();
         $party = PartyEnum::cases();
 
         return view('deputy.index', [

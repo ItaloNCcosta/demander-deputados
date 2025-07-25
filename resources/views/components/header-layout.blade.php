@@ -10,7 +10,7 @@
         <nav class="hidden md:flex gap-6 text-sm font-medium text-slate-600">
             <a href="/index.html#buscar" class="hover:text-emerald-600">Buscar</a>
             <a href="/gastos.html" class="hover:text-emerald-600">Gastos</a>
-            <a href="/ranking.html" class="hover:text-emerald-600">Ranking</a>
+            <a href="{{ route('deputies.ranking') }}" class="hover:text-emerald-600">Ranking</a>
             <a href="/sobre.html" class="hover:text-emerald-600">Sobre</a>
         </nav>
     </div>
