@@ -17,6 +17,7 @@ return new class extends Migration
                 ->constrained('deputies')
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();
+            $table->unsignedBigInteger('external_id');
             $table->unsignedBigInteger('legislature_id')->nullable()->index();
             $table->unsignedSmallInteger('year')->index();
             $table->unsignedTinyInteger('month')->index();

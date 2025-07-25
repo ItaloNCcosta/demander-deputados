@@ -115,7 +115,7 @@
                         <div>
                             <dt class="font-semibold text-slate-500">Gasto total</dt>
                             <dd class="text-slate-800">R$
-                                {{ number_format($deputy->expenses->sum('value'), 2, ',', '.') }}</dd>
+                                {{ number_format($deputy->expenses->sum('net_amount'), 2, ',', '.') }}</dd>
                         </div>
                         <div>
                             <dt class="font-semibold text-slate-500">Última atualização</dt>

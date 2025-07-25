@@ -16,12 +16,12 @@ final class ExpensesController extends Controller
     {
         $filters = $request->only(['start', 'end', 'type']);
         $expenses = $service->listByPeriod($filters);
-        $expenseType = ExpenseTypeEnum::cases();
+        // $expenseType = ExpenseTypeEnum::cases();
 
         return view('expenses.index', [
             'expenses' => $expenses,
             'filters'  => $filters,
-            'expenseType' => $expenseType
+            // 'expenseType' => $expenseType
         ]);
     }
 }

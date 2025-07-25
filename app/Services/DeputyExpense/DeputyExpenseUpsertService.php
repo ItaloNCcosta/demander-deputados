@@ -31,11 +31,12 @@ final class DeputyExpenseUpsertService
             $expense = DeputyExpense::updateOrCreate(
                 [
                     'deputy_id' => $deputyId,
+                    'external_id' => $externalDeputyId,
                     'document_code' => $documentCode,
                 ],
                 $this->mapExpenseData($data)
             );
-
+            
             $action = $expense->wasRecentlyCreated ? 'created' : 'updated';
             Log::debug("Expense {$action} for deputy {$externalDeputyId}: document {$documentCode}");
         } catch (\Exception $e) {
