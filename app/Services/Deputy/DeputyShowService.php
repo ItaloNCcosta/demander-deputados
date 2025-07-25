@@ -36,8 +36,8 @@ final class DeputyShowService
         $deputy->refresh();
 
         $expenses = $withExpenses
-            ? $this->expenseListService->listByDeputy($deputy, $filters)
-            : new LengthAwarePaginator([], 0, 15);
+            ? $this->expenseListService->listByDeputy($deputy, $filters, 50)
+            : [];
 
         return [
             'deputy'   => $deputy,

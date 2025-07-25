@@ -47,6 +47,8 @@ final class DeputyController extends Controller
             'date_start',
             'date_end',
             'order_by',
+            'month',
+            'year'
         ]);
 
         $data = $showService->handle($deputy, $filters);
@@ -55,10 +57,14 @@ final class DeputyController extends Controller
             SyncDeputyExpensesJob::dispatch($deputy->external_id);
         }
 
+        $years  = $deputy->expenses()->distinct()->orderByDesc('year')->pluck('year');
+        $months = $deputy->expenses()->distinct()->orderBy('month')->pluck('month');
+
         return view('deputies.show', [
             'deputy'   => $data['deputy'],
             'expenses' => $data['expenses'],
-            'filters'  => $filters,
+            'years'  => $years,
+            'months' => $months,
         ]);
     }
 }

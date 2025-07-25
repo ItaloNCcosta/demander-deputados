@@ -32,6 +32,16 @@ final class DeputyExpenseListService
                 fn(Builder $q) =>
                 $q->whereDate('document_date', '<=', $filters['date_end'])
             )
+            ->when(
+                !empty($filters['month']),
+                fn(Builder $q) =>
+                $q->whereDate('month', '<=', $filters['month'])
+            )
+            ->when(
+                !empty($filters['year']),
+                fn(Builder $q) =>
+                $q->whereDate('year', '<=', $filters['year'])
+            )
             ->when(!empty($filters['order_by']), function (Builder $q) use ($filters) {
                 match ($filters['order_by']) {
                     'document_date_asc'    => $q->orderBy('document_date', 'asc'),
@@ -44,6 +54,7 @@ final class DeputyExpenseListService
             ->orderBy('document_date', 'desc');
 
         return $query->paginate($limit)
-            ->withQueryString();
+            ->withQueryString()
+            ->appends($filters);
     }
 }

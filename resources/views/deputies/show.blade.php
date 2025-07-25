@@ -12,7 +12,7 @@
             </div>
         </section>
 
-        <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10" x-data="{ tab: 'perfil' }">
+        <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10" x-data="{ tab: '{{ request('tab', 'perfil') }}' }">
             <div class="flex gap-4 border-b border-slate-200/70 mb-8">
                 <button @click="tab='perfil'"
                     :class="tab === 'perfil' ? 'border-emerald-600 text-emerald-700' :
@@ -96,25 +96,44 @@
             <section x-show="tab==='despesas'" x-cloak class="space-y-6" id="despesas">
                 <div class="flex items-center justify-between">
                     <h3 class="text-lg font-semibold">Despesas</h3>
-                    <form class="flex gap-2 text-sm" method="GET">
-                        <select name="type"
-                            class="rounded-lg border-slate-300 focus:ring-emerald-500 focus:border-emerald-500">
-                            <option value="">Tipo (todos)</option>
-                            @foreach ($expenses->pluck('type')->unique() as $type)
-                                <option value="{{ $type }}" @selected(request('type') === $type)>{{ $type }}
-                                </option>
-                            @endforeach
-                        </select>
-                        <select name="date_start"
-                            class="rounded-lg border-slate-300 focus:ring-emerald-500 focus:border-emerald-500">
-                            <option value="">Ano (todos)</option>
-                            @foreach ($expenses->map(fn($e) => \Illuminate\Support\Carbon::parse($e->date)->year)->unique() as $year)
-                                <option value="{{ $year }}" @selected(request('date_start') == (string) $year)>{{ $year }}
-                                </option>
-                            @endforeach
-                        </select>
-                        <button type="submit" class="px-3 py-1 bg-emerald-600 text-white rounded-md">Filtrar</button>
+                    <form action="{{ route('deputies.show', $deputy) }}" method="GET"
+                        class="flex flex-wrap gap-2 text-sm items-end">
+                        <input type="hidden" name="tab" value="despesas">
+
+                        <div>
+                            <label class="block text-xs text-slate-500">Ano</label>
+                            <select name="year"
+                                class="rounded-lg border-slate-300 focus:ring-emerald-500 focus:border-emerald-500">
+                                <option value="">Todos</option>
+                                @foreach ($years as $year)
+                                    <option value="{{ $year }}" @selected(request('year') == $year)>
+                                        {{ $year }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        {{-- <div>
+                            <label class="block text-xs text-slate-500">Mês</label>
+                            <select name="month"
+                                class="rounded-lg border-slate-300 focus:ring-emerald-500 focus:border-emerald-500">
+                                <option value="">Todos</option>
+                                @foreach ($filterMonths as $m)
+                                    <option value="{{ $m }}" @selected(($filters['month'] ?? '') == $m)>
+                                        {{ \Carbon\Carbon::create()->month($m)->format('F') }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div> --}}
+
+                        <div class="flex gap-2">
+                            <button type="submit"
+                                class="px-3 py-1 bg-emerald-600 text-white rounded-md">Filtrar</button>
+
+                            <a href="{{ route('deputies.show', $deputy) }}?tab=despesas"
+                                class="text-slate-600 px-3 py-1 rounded-md hover:bg-slate-100">Limpar</a>
+                        </div>
                     </form>
+
                 </div>
 
                 <div class="overflow-hidden rounded-xl border border-slate-200/70 shadow-sm bg-white">
@@ -129,9 +148,9 @@
                         </thead>
                         <tbody class="divide-y divide-slate-100">
                             @forelse($expenses as $expense)
-                                <tr class="hover:bg-slate-50">
+                            <tr class="hover:bg-slate-50">
                                     <td class="px-4 py-3">
-                                        {{ \Illuminate\Support\Carbon::parse($expense->date)->format('d/m/Y') }}</td>
+                                        {{ \Illuminate\Support\Carbon::parse($expense->document_date)->format('d/m/Y') }}</td>
                                     <td class="px-4 py-3">{{ $expense->expense_type }}</td>
                                     <td class="px-4 py-3">{{ $expense->supplier_name }}</td>
                                     <td class="px-4 py-3 text-right">R$
@@ -146,6 +165,9 @@
                             @endforelse
                         </tbody>
                     </table>
+                    <div class="mt-10 flex justify-center">
+                        <x-pagination :paginator="$expenses" />
+                    </div>
                 </div>
             </section>
 
