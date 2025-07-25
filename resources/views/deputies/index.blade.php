@@ -133,36 +133,4 @@
             <x-pagination :paginator="$deputies" />
         </div>
     </main>
-
-    {{-- Ranking Section --}}
-    <section id="ranking" class="bg-white border-t border-slate-200/60">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-            <h2 class="text-xl font-semibold mb-6">Ranking de Gastos</h2>
-            <div class="overflow-hidden rounded-xl border border-slate-200/70 shadow-sm">
-                <table class="min-w-full text-sm">
-                    <thead class="bg-slate-50 text-slate-600">
-                        <tr>
-                            <th class="px-4 py-3 text-left font-medium">#</th>
-                            <th class="px-4 py-3 text-left font-medium">Deputado</th>
-                            <th class="px-4 py-3 text-left font-medium">Estado</th>
-                            <th class="px-4 py-3 text-left font-medium">Partido</th>
-                            <th class="px-4 py-3 text-right font-medium">Total</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-slate-100 bg-white">
-                        @foreach ($ranking as $deputy)
-                            <tr class="hover:bg-slate-50">
-                                <td class="px-4 py-3">{{ $loop->iteration }}</td>
-                                <td class="px-4 py-3">{{ $deputy->name }}</td>
-                                <td class="px-4 py-3">{{ $deputy->state_code }}</td>
-                                <td class="px-4 py-3">{{ $deputy->party_acronym }}</td>
-                                <td class="px-4 py-3 text-right">R$
-                                    {{ number_format($deputy->expenses->sum('value'), 2, ',', '.') }}</td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </section>
 </x-guest-layout>
