@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Enums\ExpenseTypeEnum;
 use Illuminate\Database\Eloquent\Model;
 
 final class DeputyExpense extends Model
@@ -52,6 +53,7 @@ final class DeputyExpense extends Model
         'page'                => 'integer',
         'per_page'            => 'integer',
         'last_synced_at'      => 'datetime',
+        'expense_type' => ExpenseTypeEnum::class,
     ];
 
     public function deputy()
