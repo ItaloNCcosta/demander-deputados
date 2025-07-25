@@ -97,7 +97,7 @@
     {{-- Results --}}
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <h2 class="text-xl font-semibold mb-6">Resultados ({{ $deputies->total() }})</h2>
-        <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             @forelse($deputies as $deputy)
                 <article class="bg-white rounded-xl shadow-sm border border-slate-200/70 p-4 flex flex-col">
                     <div class="flex items-center gap-3 mb-3">
