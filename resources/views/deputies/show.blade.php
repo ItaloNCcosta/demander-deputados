@@ -140,31 +140,63 @@
                     <table class="min-w-full text-sm">
                         <thead class="bg-slate-50 text-slate-600">
                             <tr>
-                                <th class="px-4 py-3 text-left font-medium">Data</th>
-                                <th class="px-4 py-3 text-left font-medium">Tipo</th>
+                                <th class="px-4 py-3 text-left font-medium">Data documento</th>
+                                <th class="px-4 py-3 text-left font-medium">Ano/Mês</th>
+                                <th class="px-4 py-3 text-left font-medium">Documento/Tipo de Despesa</th>
                                 <th class="px-4 py-3 text-left font-medium">Fornecedor</th>
-                                <th class="px-4 py-3 text-right font-medium">Valor</th>
+                                <th class="px-4 py-3 text-right font-medium">Valor Líquido</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-slate-100">
                             @forelse($expenses as $expense)
-                            <tr class="hover:bg-slate-50">
+                                <tr class="hover:bg-slate-50">
+                                    {{-- Data do documento --}}
                                     <td class="px-4 py-3">
-                                        {{ \Illuminate\Support\Carbon::parse($expense->document_date)->format('d/m/Y') }}</td>
-                                    <td class="px-4 py-3">{{ $expense->expense_type }}</td>
-                                    <td class="px-4 py-3">{{ $expense->supplier_name }}</td>
-                                    <td class="px-4 py-3 text-right">R$
-                                        {{ number_format($expense->net_amount, 2, ',', '.') }}</td>
+                                        {{ \Illuminate\Support\Carbon::parse($expense->document_date)->format('d/m/Y') }}
+                                    </td>
+
+                                    {{-- Ano/Mês --}}
+                                    <td class="px-4 py-3">
+                                        {{ $expense->year }}/{{ str_pad($expense->month, 2, '0', STR_PAD_LEFT) }}
+                                    </td>
+
+                                    {{-- Informações do documento --}}
+                                    <td class="px-4 py-3">
+                                        <div class="font-semibold">#{{ $expense->document_number }}</div>
+                                        <div class="text-xs text-slate-500">
+                                            {{ $expense->document_type }}
+                                            @if ($expense->document_url)
+                                                · <a href="{{ $expense->document_url }}" target="_blank"
+                                                    class="text-blue-600 underline">Ver</a>
+                                            @endif
+                                        </div>
+                                    </td>
+
+                                    {{-- Tipo de despesa --}}
+                                    <td class="px-4 py-3">
+                                        <div class="font-semibold text-slate-700">
+                                            {{ $expense->expense_type }}
+                                        </div>
+                                        <div class="text-sm text-slate-500">
+                                            {{ $expense->supplier_name }}
+                                        </div>
+                                    </td>
+
+                                    {{-- Valor líquido --}}
+                                    <td class="px-4 py-3 text-right">
+                                        R$ {{ number_format($expense->net_amount, 2, ',', '.') }}
+                                    </td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="4" class="px-4 py-6 text-center text-slate-500">
+                                    <td colspan="6" class="px-4 py-6 text-center text-slate-500">
                                         Nenhuma despesa encontrada.
                                     </td>
                                 </tr>
                             @endforelse
                         </tbody>
                     </table>
+
                     <div class="mt-10 flex justify-center">
                         <x-pagination :paginator="$expenses" />
                     </div>
