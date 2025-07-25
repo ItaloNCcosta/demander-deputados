@@ -7,10 +7,12 @@ namespace App\Http\Controllers\Deputy;
 use App\Enums\PartyEnum;
 use App\Enums\StateEnum;
 use App\Http\Controllers\Controller;
+use App\Jobs\DeputyExpense\SyncDeputyExpensesJob;
 use App\Models\Deputy;
 use App\Services\Deputy\DeputyListService;
 use App\Services\Deputy\DeputyRankingService;
 use App\Services\Deputy\DeputyShowService;
+use App\Services\DeputyExpense\DeputyExpenseSyncStateService;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
@@ -37,7 +39,8 @@ final class DeputyController extends Controller
     public function show(
         Request $request,
         Deputy $deputy,
-        DeputyShowService $showService
+        DeputyShowService $showService,
+        DeputyExpenseSyncStateService $syncState
     ): View {
         $filters = $request->only([
             'type',
@@ -47,6 +50,10 @@ final class DeputyController extends Controller
         ]);
 
         $data = $showService->handle($deputy, $filters);
+
+        if ($syncState->isStale($deputy, 60)) {
+            SyncDeputyExpensesJob::dispatch($deputy->external_id);
+        }
 
         return view('deputies.show', [
             'deputy'   => $data['deputy'],

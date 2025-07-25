@@ -44,14 +44,6 @@
                                 {{ optional($deputy->birth_date)->format('d/m/Y') ?? '—' }}
                             </li>
                             <li>
-                                <span class="text-slate-500">Mandato atual:</span>
-                                @if ($deputy->start_date && $deputy->end_date)
-                                    {{ $deputy->start_date->format('Y') }}‑{{ $deputy->end_date->format('Y') }}
-                                @else
-                                    —
-                                @endif
-                            </li>
-                            <li>
                                 <span class="text-slate-500">Partido / UF:</span>
                                 {{ $deputy->party_acronym }} ‑ {{ $deputy->state_code }}
                             </li>
@@ -66,16 +58,22 @@
                     <div class="bg-white rounded-xl p-6 shadow-sm border border-slate-200/70">
                         <h3 class="text-sm font-semibold text-slate-500 uppercase mb-3">Resumo financeiro</h3>
                         @php
-                            $total = $deputy->total_expenses;
-                            $months =
-                                $expenses
-                                    ->map(fn($e) => \Illuminate\Support\Carbon::parse($e->date)->format('Y-m'))
-                                    ->unique()
-                                    ->count() ?:
-                                1;
+                            $total = $expenses->sum('net_amount');
+
+                            $months = $expenses
+                                ->map(fn($e) => \Illuminate\Support\Carbon::parse($e->document_date)->format('Y-m'))
+                                ->unique()
+                                ->count();
+                            $months = $months ?: 1;
+
                             $average = $total / $months;
-                            $lastDate = $expenses->sortByDesc('date')->first()->date ?? null;
+
+                            $last = $expenses->sortByDesc('document_date')->first();
+                            $lastDate = $last
+                                ? \Illuminate\Support\Carbon::parse($last->document_date)->format('d/m/Y')
+                                : null;
                         @endphp
+
                         <ul class="text-sm space-y-2">
                             <li>
                                 Total de despesas:
@@ -87,9 +85,7 @@
                             </li>
                             <li>
                                 Última despesa:
-                                <strong>
-                                    {{ $lastDate ? \Illuminate\Support\Carbon::parse($lastDate)->format('d/m/Y') : '—' }}
-                                </strong>
+                                <strong>{{ $lastDate ?? '—' }}</strong>
                             </li>
                         </ul>
                     </div>
@@ -136,10 +132,10 @@
                                 <tr class="hover:bg-slate-50">
                                     <td class="px-4 py-3">
                                         {{ \Illuminate\Support\Carbon::parse($expense->date)->format('d/m/Y') }}</td>
-                                    <td class="px-4 py-3">{{ $expense->type }}</td>
-                                    <td class="px-4 py-3">{{ $expense->supplier }}</td>
+                                    <td class="px-4 py-3">{{ $expense->expense_type }}</td>
+                                    <td class="px-4 py-3">{{ $expense->supplier_name }}</td>
                                     <td class="px-4 py-3 text-right">R$
-                                        {{ number_format($expense->value, 2, ',', '.') }}</td>
+                                        {{ number_format($expense->net_amount, 2, ',', '.') }}</td>
                                 </tr>
                             @empty
                                 <tr>

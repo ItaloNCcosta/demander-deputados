@@ -6,18 +6,14 @@ namespace App\Enums;
 
 enum GenderEnum: string
 {
-    case MALE = "male";
-    case FEMALE = 'female';
-    case OTHER = 'other';
-    case NOT_INFORMED = 'not_informed';
+    case MALE = "M";
+    case FEMALE = 'F';
 
     public function label(): string
     {
         return match ($this) {
             self::MALE => 'Masculino',
             self::FEMALE => 'Feminino',
-            self::OTHER => 'Outro',
-            self::NOT_INFORMED => 'Prefiro não informar',
         };
     }
 

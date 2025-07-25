@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace App\Jobs\DeputyExpense;
 
 use App\Models\DeputyExpense;
-use App\Services\DeputyExpense\DeputyExpensePaginationService;
-use App\Services\DeputyExpense\DeputyExpenseSyncStateService;
 use App\Services\DeputyExpense\DeputyExpenseUpsertService;
 use App\Services\DeputyExpense\GetDeputyExpensesApiService;
 use Illuminate\Bus\Batchable;

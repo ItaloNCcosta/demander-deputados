@@ -11,6 +11,7 @@ final class DeputyExpense extends Model
 {
     protected $fillable = [
         'deputy_id',
+        'external_id',
         'legislature_id',
         'year',
         'month',
@@ -39,6 +40,7 @@ final class DeputyExpense extends Model
 
     protected $casts = [
         'deputy_id'           => 'integer',
+        'external_id'         => 'integer',
         'legislature_id'      => 'integer',
         'year'                => 'integer',
         'month'               => 'integer',
@@ -53,7 +55,7 @@ final class DeputyExpense extends Model
         'page'                => 'integer',
         'per_page'            => 'integer',
         'last_synced_at'      => 'datetime',
-        'expense_type' => ExpenseTypeEnum::class,
+        // 'expense_type' => ExpenseTypeEnum::class,
     ];
 
     public function deputy()

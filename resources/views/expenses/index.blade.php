@@ -33,7 +33,7 @@
             </div>
 
             {{-- Tipo de despesa --}}
-            <div class="md:col-span-2">
+            {{-- <div class="md:col-span-2">
                 <label class="block text-xs font-semibold text-slate-500 mb-1 uppercase tracking-wide">
                     Tipo de despesa
                 </label>
@@ -46,7 +46,7 @@
                         </option>
                     @endforeach
                 </select>
-            </div>
+            </div> --}}
 
             {{-- Ações --}}
             <div class="md:col-span-2 flex items-end gap-2">
