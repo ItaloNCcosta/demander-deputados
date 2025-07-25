@@ -22,7 +22,11 @@ final class DeputyShowService
     public function handle(Deputy $deputy, array $filters = [], bool $withExpenses = true): array
     {
         $isEmpty = $deputy->expenses()->count() === 0;
-        if ($withExpenses && $isEmpty || $this->syncStateService->isStale($deputy)) {
+
+        if (
+            $withExpenses && $isEmpty
+            || $this->syncStateService->isStale($deputy)
+        ) {
             SyncDeputyExpensesJob::dispatchSync($deputy->external_id);
         }
 

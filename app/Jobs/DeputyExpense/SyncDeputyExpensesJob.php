@@ -34,7 +34,10 @@ final class SyncDeputyExpensesJob implements ShouldQueue
         $lastDate = DeputyExpense::whereRelation('deputy', 'external_id', $this->externalDeputyId)
             ->max('document_date');
 
-        $filters = $lastDate ? ['dataInicio' => $lastDate] : [];
+        $filters = $lastDate ? [
+            'dataInicial' => $lastDate,
+            'dataFinal'   => now()->format('Y-m-d'),
+        ] : [];
 
         $response = $api->list($this->externalDeputyId, $filters);
 
