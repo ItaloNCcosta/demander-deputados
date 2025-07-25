@@ -14,15 +14,16 @@
 
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @stack('styles')
 </head>
 
-<body class="bg-slate-50 text-slate-800 antialiased selection:bg-emerald-200/60">
+<body class="flex flex-col min-h-screen bg-slate-50 text-slate-800 antialiased selection:bg-emerald-200/60">
     <x-header-layout />
 
-    <main class="py-6">
+    <main class="flex-grow">
         {{ $slot }}
     </main>
 

@@ -1,154 +1,189 @@
 <x-guest-layout title="{{ $deputy->name }}">
-    <div class="max-w-7xl mx-auto">
-
-        {{-- Botão “Voltar” --}}
-        <div>
-            <a href="{{ route('deputy.index') }}"
-                class="py-4 inline-flex items-center text-indigo-600 hover:text-indigo-900">
-                ← Voltar
-            </a>
-        </div>
-
-        {{-- card deputy --}}
-        <div class="bg-white shadow rounded-lg p-6">
-            <div class="flex items-center space-x-6">
-                <img class="h-24 w-24 rounded-full object-cover" src="{{ $deputy->photo_url }}" alt="{{ $deputy->name }}">
+    <div class="">
+        <section class="bg-emerald-600 text-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 flex items-center gap-6">
+                <img src="{{ $deputy->photo_url }}" alt="Foto do deputado {{ $deputy->name }}"
+                    class="w-28 h-28 rounded-full object-cover ring-4 ring-white/30">
                 <div>
-                    <h1 class="text-2xl font-bold text-gray-900">{{ $deputy->name }}</h1>
-                    <p class="text-xs text-slate-500 mt-0.5">{{ $deputy->party_acronym }} •
-                        {{ $deputy->state_code }}</p>
+                    <h1 class="text-3xl font-extrabold leading-tight">{{ $deputy->name }}</h1>
+                    <p class="text-emerald-100 mt-1">{{ $deputy->party_acronym }} •
+                        {{ $deputy->state_code }} • {{ $deputy->email }}</p>
                 </div>
             </div>
+        </section>
 
-            @php
-                $totalExpenses = $expenses
-                    ? $expenses->getCollection()->sum('document_amount')
-                    : collect($expenses)->sum('document_amount');
-            @endphp
-
-            <div class="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div class="bg-green-50 p-4 rounded-lg flex items-center justify-between">
-                    <span class="text-sm font-medium text-green-700">Gasto total</span>
-                    <span class="text-xl font-bold text-green-900">
-                        R$ {{ number_format($totalExpenses, 2, ',', '.') }}
-                    </span>
-                </div>
-                <div class="bg-blue-50 p-4 rounded-lg flex items-center justify-between">
-                    <span class="text-sm font-medium text-blue-700">Última atualização</span>
-                    <span class="text-xl font-bold text-blue-900">
-                        {{ \Carbon\Carbon::parse($deputy->last_update)->format('d/m/Y') }}
-                    </span>
-                </div>
+        <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10" x-data="{ tab: 'perfil' }">
+            <div class="flex gap-4 border-b border-slate-200/70 mb-8">
+                <button @click="tab='perfil'"
+                    :class="tab === 'perfil' ? 'border-emerald-600 text-emerald-700' :
+                        'border-transparent text-slate-500 hover:text-slate-700'"
+                    class="px-4 py-2 border-b-2 text-sm font-medium">Perfil</button>
+                <button @click="tab='despesas'"
+                    :class="tab === 'despesas' ? 'border-emerald-600 text-emerald-700' :
+                        'border-transparent text-slate-500 hover:text-slate-700'"
+                    class="px-4 py-2 border-b-2 text-sm font-medium">Despesas</button>
+                <button @click="tab='contato'"
+                    :class="tab === 'contato' ? 'border-emerald-600 text-emerald-700' :
+                        'border-transparent text-slate-500 hover:text-slate-700'"
+                    class="px-4 py-2 border-b-2 text-sm font-medium">Contato</button>
             </div>
-        </div>
 
-        {{-- List expenses --}}
-        <div>
-            <h2 class="text-lg font-semibold text-gray-900 mb-4">Despesas</h2>
-
-            <div class="bg-white p-6 rounded-lg shadow mb-6">
-                <form id="filter-form" method="GET" action="{{ route('deputy.show', $deputy) }}"
-                    class="grid grid-cols-1 md:grid-cols-4 gap-6">
-
-                    <div>
-                        <label for="date_start" class="block text-sm font-medium text-gray-700">Data Início</label>
-                        <input type="date" name="date_start" id="date_start"
-                            value="{{ request('date_start') ? Carbon::parse(request('date_start'))->format('d/m/Y') : '' }}"
-                            placeholder="dd/mm/aaaa"
-                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm
-                   focus:ring-indigo-500 focus:border-indigo-500" />
+            {{-- PERFIL --}}
+            <section x-show="tab==='perfil'" x-cloak class="space-y-6">
+                <div class="grid sm:grid-cols-2 gap-6">
+                    {{-- Informações básicas --}}
+                    <div class="bg-white rounded-xl p-6 shadow-sm border border-slate-200/70">
+                        <h3 class="text-sm font-semibold text-slate-500 uppercase mb-3">Informações básicas</h3>
+                        <ul class="text-sm space-y-2">
+                            <li>
+                                <span class="text-slate-500">Nome civil:</span>
+                                {{ $deputy->civil_name ?? '—' }}
+                            </li>
+                            <li>
+                                <span class="text-slate-500">Nascimento:</span>
+                                {{ optional($deputy->birth_date)->format('d/m/Y') ?? '—' }}
+                            </li>
+                            <li>
+                                <span class="text-slate-500">Mandato atual:</span>
+                                @if ($deputy->start_date && $deputy->end_date)
+                                    {{ $deputy->start_date->format('Y') }}‑{{ $deputy->end_date->format('Y') }}
+                                @else
+                                    —
+                                @endif
+                            </li>
+                            <li>
+                                <span class="text-slate-500">Partido / UF:</span>
+                                {{ $deputy->party_acronym }} ‑ {{ $deputy->state_code }}
+                            </li>
+                            <li>
+                                <span class="text-slate-500">CPF:</span>
+                                {{ $deputy->cpf ?? '—' }}
+                            </li>
+                        </ul>
                     </div>
 
-                    <div>
-                        <label for="date_end" class="block text-sm font-medium text-gray-700">Data Fim</label>
-                        <input type="date" name="date_end" id="date_end" value="{{ request('date_end') }}"
-                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm
-                   focus:ring-indigo-500 focus:border-indigo-500" />
+                    {{-- Resumo financeiro --}}
+                    <div class="bg-white rounded-xl p-6 shadow-sm border border-slate-200/70">
+                        <h3 class="text-sm font-semibold text-slate-500 uppercase mb-3">Resumo financeiro</h3>
+                        @php
+                            $total = $deputy->total_expenses;
+                            $months =
+                                $expenses
+                                    ->map(fn($e) => \Illuminate\Support\Carbon::parse($e->date)->format('Y-m'))
+                                    ->unique()
+                                    ->count() ?:
+                                1;
+                            $average = $total / $months;
+                            $lastDate = $expenses->sortByDesc('date')->first()->date ?? null;
+                        @endphp
+                        <ul class="text-sm space-y-2">
+                            <li>
+                                Total de despesas:
+                                <strong>R$ {{ number_format($total, 2, ',', '.') }}</strong>
+                            </li>
+                            <li>
+                                Média mensal:
+                                <strong>R$ {{ number_format($average, 2, ',', '.') }}</strong>
+                            </li>
+                            <li>
+                                Última despesa:
+                                <strong>
+                                    {{ $lastDate ? \Illuminate\Support\Carbon::parse($lastDate)->format('d/m/Y') : '—' }}
+                                </strong>
+                            </li>
+                        </ul>
                     </div>
+                </div>
+            </section>
 
-                    <div>
-                        <label for="order_by" class="block text-sm font-medium text-gray-700">Ordenar por</label>
-                        <select name="order_by" id="order_by"
-                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
-                            <option value="">Padrão</option>
-                            <option value="document_date_desc" @if (request('order_by') === 'document_date_desc') selected @endif>
-                                Data ↓
-                            </option>
-                            <option value="document_date_asc" @if (request('order_by') === 'document_date_asc') selected @endif>
-                                Data ↑
-                            </option>
-                            <option value="document_amount_desc" @if (request('order_by') === 'document_amount_desc') selected @endif>
-                                Valor ↓
-                            </option>
-                            <option value="document_amount_asc" @if (request('order_by') === 'document_amount_asc') selected @endif>
-                                Valor ↑
-                            </option>
+            {{-- DESPESAS --}}
+            <section x-show="tab==='despesas'" x-cloak class="space-y-6" id="despesas">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-lg font-semibold">Despesas</h3>
+                    <form class="flex gap-2 text-sm" method="GET">
+                        <select name="type"
+                            class="rounded-lg border-slate-300 focus:ring-emerald-500 focus:border-emerald-500">
+                            <option value="">Tipo (todos)</option>
+                            @foreach ($expenses->pluck('type')->unique() as $type)
+                                <option value="{{ $type }}" @selected(request('type') === $type)>{{ $type }}
+                                </option>
+                            @endforeach
                         </select>
-                    </div>
+                        <select name="date_start"
+                            class="rounded-lg border-slate-300 focus:ring-emerald-500 focus:border-emerald-500">
+                            <option value="">Ano (todos)</option>
+                            @foreach ($expenses->map(fn($e) => \Illuminate\Support\Carbon::parse($e->date)->year)->unique() as $year)
+                                <option value="{{ $year }}" @selected(request('date_start') == (string) $year)>{{ $year }}
+                                </option>
+                            @endforeach
+                        </select>
+                        <button type="submit" class="px-3 py-1 bg-emerald-600 text-white rounded-md">Filtrar</button>
+                    </form>
+                </div>
 
-                    <div class="md:col-span-2 flex items-end gap-2">
-                        <button type="submit"
-                            class="bg-emerald-600 hover:bg-emerald-700 text-white text-sm px-4 py-2 rounded-lg">
-                            Aplicar
-                        </button>
-                        <a href="{{ route('deputy.show', $deputy) }}"
-                            class="text-slate-600 text-sm px-4 py-2 rounded-lg hover:bg-slate-100">
-                            Limpar
-                        </a>
-                    </div>
-                </form>
-            </div>
-
-            {{-- expenses --}}
-            <div class="overflow-x-auto bg-white shadow rounded-lg">
-                <table class="min-w-full divide-y divide-gray-200">
-                    <thead class="bg-gray-50">
-                        <tr>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Tipo de Despesa
-                            </th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Data
-                            </th>
-                            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Valor
-                            </th>
-                            <th class="px-6 py-3"></th>
-                        </tr>
-                    </thead>
-                    <tbody class="bg-white divide-y divide-gray-200">
-                        @forelse($expenses as $expense)
+                <div class="overflow-hidden rounded-xl border border-slate-200/70 shadow-sm bg-white">
+                    <table class="min-w-full text-sm">
+                        <thead class="bg-slate-50 text-slate-600">
                             <tr>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
-                                    {{ $expense->expense_type }}
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
-                                    {{ \Carbon\Carbon::parse($expense->document_date)->format('d/m/Y') }}
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-right">
-                                    R$ {{ number_format($expense->document_amount, 2, ',', '.') }}
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-right">
-                                    <a href="{{ $expense->document_url }}" target="_blank"
-                                        class="text-indigo-600 hover:text-indigo-900">
-                                        Ver documento
-                                    </a>
-                                </td>
+                                <th class="px-4 py-3 text-left font-medium">Data</th>
+                                <th class="px-4 py-3 text-left font-medium">Tipo</th>
+                                <th class="px-4 py-3 text-left font-medium">Fornecedor</th>
+                                <th class="px-4 py-3 text-right font-medium">Valor</th>
                             </tr>
-                        @empty
-                            <tr>
-                                <td colspan="4" class="px-6 py-4 text-center text-gray-500">
-                                    Nenhuma despesa encontrada.
-                                </td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                </table>
-            </div>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100">
+                            @forelse($expenses as $expense)
+                                <tr class="hover:bg-slate-50">
+                                    <td class="px-4 py-3">
+                                        {{ \Illuminate\Support\Carbon::parse($expense->date)->format('d/m/Y') }}</td>
+                                    <td class="px-4 py-3">{{ $expense->type }}</td>
+                                    <td class="px-4 py-3">{{ $expense->supplier }}</td>
+                                    <td class="px-4 py-3 text-right">R$
+                                        {{ number_format($expense->value, 2, ',', '.') }}</td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="4" class="px-4 py-6 text-center text-slate-500">
+                                        Nenhuma despesa encontrada.
+                                    </td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+            </section>
 
-            <div class="mt-10 flex justify-center">
-                <x-pagination :paginator="$expenses" />
-            </div>
-        </div>
+            {{-- CONTATO --}}
+            <section x-show="tab==='contato'" x-cloak class="space-y-6">
+                <div class="bg-white rounded-xl p-6 shadow-sm border border-slate-200/70">
+                    <h3 class="text-sm font-semibold text-slate-500 uppercase mb-3">Canais oficiais</h3>
+                    <ul class="text-sm space-y-2">
+                        <li>
+                            <span class="text-slate-500">Email:</span>
+                            {{ $deputy->office_email ?? ($deputy->email ?? '—') }}
+                        </li>
+                        <li>
+                            <span class="text-slate-500">Telefone:</span>
+                            {{ $deputy->office_phone ?? '—' }}
+                        </li>
+                        @if ($deputy->website_url)
+                            <li>
+                                <span class="text-slate-500">Site:</span>
+                                <a href="{{ $deputy->website_url }}" target="_blank"
+                                    class="text-emerald-700 hover:underline">
+                                    {{ $deputy->website_url }}
+                                </a>
+                            </li>
+                        @endif
+                        @if (!empty($deputy->social_links))
+                            <li>
+                                <span class="text-slate-500">Redes sociais:</span>
+                                {{ implode(' • ', $deputy->social_links) }}
+                            </li>
+                        @endif
+                    </ul>
+                </div>
+            </section>
+        </main>
     </div>
 </x-guest-layout>
