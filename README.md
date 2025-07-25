@@ -1,61 +1,153 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Demander Deputados 🚀
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Aplicação Laravel para sincronizar e exibir dados de deputados e suas despesas a partir da API aberta da Câmara dos Deputados.  
+Inclui sincronização automática em background via filas (Redis + Horizon), agendamento de jobs (Scheduler) e painel de monitoramento.
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 📦 Tecnologias
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- **Laravel 12**  
+- **MySQL**  
+- **Redis** (filas)  
+- **Laravel Horizon** (dashboard de filas)  
+- **Docker & Docker Compose**  
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+---
 
-## Learning Laravel
+## 🔧 Pré-requisitos
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+- Docker (>= 20.10)  
+- Docker Compose (>= 1.27)  
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+---
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## 🚀 Passo a passo
 
-## Laravel Sponsors
+1. **Clone o repositório**  
+   ```bash
+   git clone https://github.com/ItaloNCcosta/demander-deputados.git
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+   ou
 
-### Premium Partners
+   git clone git@github.com:ItaloNCcosta/demander-deputados.git
+   cd demander-deputados
+   ```
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+2. **Copie o `.env`**  
+   ```bash
+   cp .env.example .env
+   ```
+   Ajuste, se quiser, as credenciais MySQL ou outras variáveis.
 
-## Contributing
+3. **Suba os containers**  
+   ```bash
+   docker compose up -d --build
+   ```
+   Isso criará e iniciará os serviços:
+   - `redis`  
+   - `mysql`  
+   - `laravel` (PHP-FPM)  
+   - `nginx`  
+   - `worker` (queue:work)  
+   - `scheduler` (schedule:work)  
+   - `horizon`  
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+4. **Instale dependências PHP**  
+   ```bash
+   docker exec -it demander-laravel composer install --optimize-autoloader --no-dev
+   ```
 
-## Code of Conduct
+5. **Gere a chave da aplicação**  
+   ```bash
+   docker exec -it demander-laravel php artisan key:generate
+   ```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+6. **Rode migrações & seeders**  
+   ```bash
+   docker exec -it demander-laravel php artisan migrate --force
+   ```
+   Se você tiver o comando de bootstrap criado (veja `app:bootstrap-data`), pode rodar:
+   ```bash
+   docker exec -it demander-laravel php artisan app:bootstrap-data
+   ```
+   Isso irá sincronizar inicialmente todos os deputados e despesas.
 
-## Security Vulnerabilities
+7. **Acesse a aplicação**  
+   - **Web**: http://127.0.0.1:8080  
+   - **Horizon**: http://127.0.0.1:8080/horizon  
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+---
 
-## License
+## ⚙️ Gerenciamento de filas e agendamentos
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+- **Dashboard Horizon**  
+  Verifique o status de jobs, batches e métricas:  
+  `http://127.0.0.1:8080/horizon`
+
+- **Comandos úteis**  
+  ```bash
+  # Listar tarefas agendadas
+  docker exec -it demander-laravel php artisan schedule:list
+
+  # Forçar execução imediata dos agendamentos
+  docker exec -it demander-laravel php artisan schedule:run --verbose
+
+  # Reiniciar workers (limpa código cache e recarrega)
+  docker exec -it demander-laravel php artisan queue:restart
+
+  # Encerrar Horizon para reiniciar com nova config
+  docker exec -it demander-laravel php artisan horizon:terminate
+  ```
+
+- **Limpar filas e cache**  
+  ```bash
+  # Redis
+  docker exec -it demander-redis redis-cli FLUSHDB
+
+  # Failed jobs (database driver)
+  docker exec -it demander-laravel php artisan queue:flush
+
+  # Cache geral
+  docker exec -it demander-laravel php artisan cache:clear
+  ```
+
+- **Parar e remover todo o setup Docker**  
+  ```bash
+  docker-compose down --rmi all --volumes --remove-orphans
+  ```
+
+---
+
+## 📖 Estrutura de containers
+
+```text
+services:
+  redis           # broker de fila e cache
+  mysql           # banco de dados
+  laravel         # PHP-FPM + app code
+  nginx           # web server
+  worker          # php artisan queue:work
+  scheduler       # php artisan schedule:work
+  horizon         # php artisan horizon
+```
+
+---
+
+## 📝 Observações
+
+- A sincronização adota uma abordagem híbrida:
+  - **Stale-while-revalidate**: ao acessar a página, exibe dados do banco e dispara revalidação em background se estiverem “stale”.
+  - **Jobs agendados**: independentemente do acesso do usuário, há schedules definidos:
+    - `SyncAllDeputiesJob` rodando **a cada hora**.
+    - `SyncAllDeputiesExpensesJob` rodando **a cada quinze minutos**.
+- Ajuste no `.env`:  
+  ```dotenv
+  QUEUE_CONNECTION=redis
+  CACHE_DRIVER=redis
+  SESSION_DRIVER=redis
+  REDIS_HOST=redis
+  REDIS_PORT=6379
+  ```
+
+Pronto! Agora seu ambiente Docker está configurado para rodar automaticamente filas, agendamentos e dashboard de monitoramento. Qualquer dúvida, consulte a [documentação oficial do Laravel](https://laravel.com/docs/12.x).
