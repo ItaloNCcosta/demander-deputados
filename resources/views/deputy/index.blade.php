@@ -104,7 +104,9 @@
                         <img loading="lazy" src="{{ $deputy->photo_url ?: 'https://via.placeholder.com/64' }}"
                             alt="Foto de {{ $deputy->name }}" class="w-14 h-14 rounded-full object-cover" />
                         <div>
-                            <h3 class="font-semibold text-slate-900 leading-tight">{{ $deputy->name }}</h3>
+                            <h3 class="font-semibold text-slate-900 leading-tight">
+                                <a href="{{ route('deputy.show', $deputy) }}">{{ $deputy->name }}</a>
+                            </h3>
                             <p class="text-xs text-slate-500 mt-0.5">{{ $deputy->party_acronym }} •
                                 {{ $deputy->state_code }}</p>
                         </div>

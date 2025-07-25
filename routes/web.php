@@ -8,3 +8,4 @@ Route::get('/', function () {
 });
 
 Route::get('/', [DeputyController::class, 'index'])->name('deputy.index');
+Route::get('/deputy/{deputy}/expenses', [DeputyController::class, 'show'])->name('deputy.show');
