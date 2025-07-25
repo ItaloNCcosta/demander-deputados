@@ -119,7 +119,7 @@
                         </div>
                         <div>
                             <dt class="font-semibold text-slate-500">Última atualização</dt>
-                            <dd class="text-slate-800">{{ optional($deputy->expenses->max('date'))->format('d/m/Y') }}
+                            <dd class="text-slate-800">{{ optional($deputy->expenses->max('last_synced_at'))->format('d/m/Y') }}
                             </dd>
                         </div>
                     </dl>
