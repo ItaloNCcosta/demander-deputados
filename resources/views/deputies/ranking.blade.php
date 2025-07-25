@@ -67,7 +67,7 @@
                     @foreach ($ranking as $idx => $deputy)
                         <tr class="hover:bg-slate-50">
                             <td class="px-4 py-3">
-                                <a href="{{ route('deputy.show', $deputy) }}" class="text-emerald-700 hover:underline">
+                                <a href="{{ route('deputies.show', $deputy) }}" class="text-emerald-700 hover:underline">
                                     {{ $deputy->name }}
                                 </a>
                             </td>
