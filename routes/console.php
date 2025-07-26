@@ -10,5 +10,5 @@ Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->purpose('Display an inspiring quote');
 
-Schedule::job(new SyncAllDeputiesJob())->hourly();
-Schedule::job(new SyncAllDeputiesExpensesJob())->everyFifteenMinutes();
+Schedule::job(new SyncAllDeputiesJob())->hourly()->timezone('America/Fortaleza');
+Schedule::job(new SyncAllDeputiesExpensesJob())->everyFifteenMinutes()->timezone('America/Fortaleza');

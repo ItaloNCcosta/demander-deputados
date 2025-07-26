@@ -80,6 +80,7 @@ services:
       - laravel
     networks:
       - demander-network
+    restart: unless-stopped
 
   horizon:
     container_name: demander-horizon
