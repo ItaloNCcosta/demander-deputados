@@ -29,15 +29,5 @@ php artisan migrate --force
 echo "🌱 Rodando seeders..."
 php artisan db:seed --force
 
-if [ ! -d "node_modules" ]; then
-    echo "📦 node_modules não encontrado. Instalando dependências..."
-    npm install
-else
-    echo "✅ node_modules já existe. Pulando npm install."
-fi
-
-echo "⚡ Rodando npm run dev em segundo plano..."
-npm run dev &
-
 echo "🖥️ Iniciando o PHP-FPM..."
 exec php-fpm
