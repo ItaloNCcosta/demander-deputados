@@ -5,6 +5,7 @@ services:
     build:
       context: .
       dockerfile: ./docker/php/Dockerfile
+    command: ["php-fpm"]
     restart: no
     volumes:
       - ./:/var/www:delegated
@@ -85,12 +86,15 @@ services:
     build:
       context: .
       dockerfile: ./docker/php/Dockerfile
-    command: php artisan horizon
+    command: ["php", "artisan", "horizon"]
+    working_dir: /var/www
+    restart: unless-stopped
     volumes:
       - ./:/var/www:delegated
       - bootstrap_cache:/var/www/bootstrap/cache
     depends_on:
       - redis
+      - laravel
     networks:
       - demander-network
 
