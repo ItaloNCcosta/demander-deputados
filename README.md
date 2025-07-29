@@ -48,8 +48,7 @@ Inclui sincronização automática em background via filas (Redis + Horizon), ag
    - `redis`  
    - `mysql`  
    - `laravel` (PHP-FPM)  
-   - `nginx`  
-   - `worker` (queue:work)  
+   - `nginx`
    - `scheduler` (schedule:work)  
    - `horizon`  
 
@@ -127,7 +126,6 @@ services:
   mysql           # banco de dados
   laravel         # PHP-FPM + app code
   nginx           # web server
-  worker          # php artisan queue:work
   scheduler       # php artisan schedule:work
   horizon         # php artisan horizon
 ```
