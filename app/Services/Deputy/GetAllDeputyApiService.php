@@ -54,7 +54,7 @@ final class GetAllDeputyApiService
 
         return Cache::remember(
             $key,
-            now()->addMinutes(120),
+            now()->addMinutes(1),
             fn() =>
             $this->request('deputados', $filters)
         );
@@ -66,7 +66,7 @@ final class GetAllDeputyApiService
 
         return Cache::remember(
             $key,
-            now()->addMinutes(120),
+            now()->addMinutes(1),
             fn() => $this->request($url)
         );
     }

@@ -54,7 +54,7 @@ final class GetDeputyExpensesApiService
 
         return Cache::remember(
             $key,
-            now()->addMinutes(120),
+            now()->addMinutes(1),
             fn() =>
             $this->request("deputados/{$id}/despesas", $filters)
         );
@@ -66,7 +66,7 @@ final class GetDeputyExpensesApiService
 
         return Cache::remember(
             $key,
-            now()->addMinutes(120),
+            now()->addMinutes(1),
             fn() => $this->request($url)
         );
     }

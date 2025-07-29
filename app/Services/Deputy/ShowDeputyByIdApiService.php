@@ -46,12 +46,6 @@ final class ShowDeputyByIdApiService
 
     public function showById(int $id): array
     {
-        $cacheKey = "deputy_{$id}";
-
-        return Cache::remember(
-            $cacheKey,
-            now()->addMinutes(120),
-            fn() => $this->request("deputados/{$id}")
-        );
+        return $this->request("deputados/{$id}");
     }
 }
