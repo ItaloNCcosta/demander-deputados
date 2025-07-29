@@ -27,9 +27,9 @@ Inclui sincronização automática em background via filas (Redis + Horizon), ag
 1. **Clone o repositório**  
    ```bash
    git clone https://github.com/ItaloNCcosta/demander-deputados.git
-
+   ``` 
    ou
-
+    ```bash
    git clone git@github.com:ItaloNCcosta/demander-deputados.git
    cd demander-deputados
    ```
